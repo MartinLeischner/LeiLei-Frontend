@@ -9,7 +9,7 @@
      </div>
      <ul class="list-group list-group-flush">
        <li class="list-group-item">{{rezept.time}}</li>
-       <li class="list-group-item">{{rezept.diifculty}}</li>
+       <li class="list-group-item">{{rezept.difficulty}}</li>
        <li class="list-group-item">A third item</li>
      </ul>
      <div class="card-body">
@@ -47,12 +47,13 @@ export default {
     }
   },
   mounted () {
+    const endpoint = process.env.VIE_APP_BACKEND_BASE_URL + 'api/v1/persons'
     const requestOptions = {
       method: 'GET',
       redirect: 'follow'
     }
 
-    fetch('https://leileihtw.herokuapp.com/api/v1/rezepte', requestOptions)
+    fetch(endpoint, requestOptions)
       .then(response => response.json())
       .then(result => result.forEach(rezept => {
         this.rezepte.push(rezept)
