@@ -41,11 +41,11 @@
 <script>
 export default {
   name: 'Rezepte',
-  data() {
+  data () {
     return {
       rezepte: [
         {
-          id: "1",
+          id: '1',
           name: 'Kaesesandwich',
           ingredient: 'Brot, Käse, Mayo, Salami, Salat',
           diifculty: 'leicht',
@@ -53,9 +53,9 @@ export default {
         }
       ]
     }
-  }/*,
+  } /*,
   methods: {
-  }*/
+  } */
 }
 </script>
 
