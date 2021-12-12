@@ -41,21 +41,24 @@
 <script>
 export default {
   name: 'Rezepte',
-  data() {
+  data () {
     return {
-      rezepte: [
-        {
-          id: "1",
-          name: 'Kaesesandwich',
-          ingredient: 'Brot, Käse, Mayo, Salami, Salat',
-          diifculty: 'leicht',
-          time: '10'
-        }
-      ]
+      rezepte: []
     }
-  }/*,
-  methods: {
-  }*/
+  },
+  mounted () {
+    const requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    }
+
+    fetch('https://leileihtw.herokuapp.com/api/v1/rezepte', requestOptions)
+      .then(response => response.json())
+      .then(result => result.forEach(rezept => {
+        this.rezepte.push(rezept)
+      }))
+      .catch(error => console.log('error', error))
+  }
 }
 </script>
 
