@@ -1,5 +1,5 @@
 <template>
-<h1>Welcome to Rezepte</h1>
+<h1>Hier finden Sie unsere Rezepte</h1>
 </template>
 
 <script>
