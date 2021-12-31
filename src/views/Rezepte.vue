@@ -4,7 +4,7 @@
     <div class="card" style="width: 18rem;">
      <img src="../assets/kisspng-cheese-sandwich-butterbrot-bread-bread-cheese-sandwich-5a9d7293bf4f09.1927332815202679237836.jpg" class="card-img-top" :alt="rezept.name">
       <div class="card-body">
-       <h5 class="card-title">{{rezept.name}}</h5>
+        <h5 class="card-title">{{rezept.name}}</h5>
        <p class="card-text">{{rezept.ingredient}}</p>
      </div>
      <ul class="list-group list-group-flush">
