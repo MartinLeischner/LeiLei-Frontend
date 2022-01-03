@@ -1,4 +1,5 @@
 <template>
+  <div class="p-3 mb-2 bg-success text-white">
 <h1>Hier finden Sie unsere Rezepte</h1>
   <div class="col" v-for="rezept in rezepte" :key="rezept.id">
     <div class="card" style="width: 18rem;">
@@ -17,7 +18,7 @@
        <a href="#" class="card-link">Another link</a>
      </div>
    </div>
-
+</div>
   </div>
 <!--  <div class="card" style="width: 18rem;">
     <img src="..." class="card-img-top" alt="...">

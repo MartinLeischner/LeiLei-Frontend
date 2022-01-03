@@ -1,14 +1,16 @@
 <template>
   <Navbar></Navbar>
   <router-view/>
+  <RezepteCreation></RezepteCreation>
 </template>
 
 <script>
 import Navbar from './components/Navbar'
+import RezepteCreation from './components/RezepteCreation'
 
 export default {
   name: 'App',
-  components: { Navbar }
+  components: { Navbar, RezepteCreation }
 }
 
 </script>

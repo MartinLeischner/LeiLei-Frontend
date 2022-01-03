@@ -1,7 +1,9 @@
 <template>
+  <div class="p-3 mb-2 bg-success text-white">
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <button type="button">Primary</button>
+    <button type="button">Zu den Rezepten</button>
+  </div>
   </div>
 </template>
 
