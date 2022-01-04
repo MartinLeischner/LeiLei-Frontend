@@ -1,42 +1,29 @@
 <template>
-  <div class="p-3 mb-2 bg-success text-white">
-<h1>Hier finden Sie unsere Rezepte</h1>
-  <div class="col" v-for="rezept in rezepte" :key="rezept.id">
-    <div class="card" style="width: 18rem;">
-     <img src="../assets/kisspng-cheese-sandwich-butterbrot-bread-bread-cheese-sandwich-5a9d7293bf4f09.1927332815202679237836.jpg" class="card-img-top" :alt="rezept.name">
-      <div class="card-body">
-        <h5 class="card-title">{{rezept.name}}</h5>
-       <p class="card-text">{{rezept.ingredient}}</p>
-     </div>
-     <ul class="list-group list-group-flush">
-       <li class="list-group-item">{{rezept.time}}</li>
-       <li class="list-group-item">{{rezept.difficulty}}</li>
-       <li class="list-group-item">A third item</li>
-     </ul>
-     <div class="card-body">
-       <a href="#" class="card-link">Card link</a>
-       <a href="#" class="card-link">Another link</a>
-     </div>
-   </div>
-</div>
-  </div>
-<!--  <div class="card" style="width: 18rem;">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="p-3 mb-2 bg-success text-white">
+        <h1>Hier finden Sie unsere Rezepte</h1>
     </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">An item</li>
-      <li class="list-group-item">A second item</li>
-      <li class="list-group-item">A third item</li>
-    </ul>
-    <div class="card-body">
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
+    <div class="container">
+        <div class="rezept__gallery">
+            <div class="col col-sm-4" v-for="rezept in rezepte" :key="rezept.id">
+                <div class="card rezept__card">
+                    <img :src="rezept.imagePath" class="card-img-top" :alt="rezept.name">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ rezept.name }}</h5>
+                        <div class="card-text">
+                            {{ rezept.ingredient }}
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">{{ rezept.time }}</li>
+                                <li class="list-group-item">{{ rezept.difficulty }}</li>
+                                <li class="list-group-item">A third item</li>
+                            </ul>
+                        </div>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  -->
 </template>
 
 <script>
@@ -55,7 +42,10 @@ export default {
     }
 
     fetch(endpoint, requestOptions)
-      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+        return response.json()
+      })
       .then(result => result.forEach(rezept => {
         this.rezepte.push(rezept)
       }))
@@ -65,5 +55,14 @@ export default {
 </script>
 
 <style scoped>
+.rezept__gallery {
+    display: flex;
+    flex-direction: row;
+    flex-flow: row;
+}
 
+.rezept__card {
+    border-radius: 16px;
+    margin: 8px;
+}
 </style>
