@@ -3,20 +3,21 @@
     <div class="col col-sm-4" v-for="rezept in rezepte" :key="rezept.id">
       <div class="rezept__card">
         <div class="rezept__badge">
-          <img :src=getDifficulty(rezept) alt="Badge">
+          <img :src=getDifficultyBadge(rezept) alt="Badge">
         </div>
         <div class="card">
           <img :src="rezept.imagePath" class="card-img-top" :alt="rezept.name">
           <div class="card-body">
-            <h5 class="card-title">{{ rezept.name }}</h5>
-            <div class="card-text">
-              {{ rezept.ingredient }}
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">{{ rezept.time }}</li>
-              </ul>
+            <div class="card-title d-flex justify-content-between">
+              <h5>{{ rezept.name }}</h5>
+              <div class="card-time"><i class="bi bi-clock"></i> {{ rezept.time }}</div>
             </div>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+            <div class="dropdown-divider"></div>
+            <div class="card-text text-start mb-3">
+              {{ rezept.ingredient }}
+            </div>
+            <button class="btn btn-primary me-3 card-link" @click="goToRezept(rezept.id)">Zum Rezept</button>
+            <button class="btn btn-danger card-link" @click="deleteRezept(rezept.id)">Löschen</button>
           </div>
         </div>
       </div>
@@ -25,6 +26,10 @@
 </template>
 
 <script>
+import axios from 'axios'
+
+const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
+
 export default {
   name: 'RezepteCardList',
   props: {
@@ -34,19 +39,29 @@ export default {
     }
   },
   methods: {
-    getDifficulty (rezept) {
-      console.log(rezept)
+    getDifficultyBadge (rezept) {
       if (rezept.difficulty === 0) {
         return require('../assets/leicht.png')
       }
       if (rezept.difficulty === 1) {
-        const image = require('../assets/mittel.png')
-        console.log(image)
-        return image
+        return require('../assets/mittel.png')
       }
       if (rezept.difficulty === 2) {
         return require('../assets/schwer.png')
       }
+    },
+    goToRezept (id) {
+      this.$router.push({ name: 'Rezept', params: { id: id } })
+    },
+    deleteRezept (id) {
+      axios.delete(endpoint + '/' + id)
+        .then(response => {
+          // this.$store.dispatch('deleteRezept', id)
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 }
@@ -54,7 +69,15 @@ export default {
 </script>
 
 <style scoped>
+.rezept__gallery {
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+}
+
 .rezept__card {
+  border-radius: 16px;
+  margin: 8px;
   padding: 50px;
   position: relative;
 }

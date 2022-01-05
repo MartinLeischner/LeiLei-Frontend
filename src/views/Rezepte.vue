@@ -3,12 +3,14 @@
     <h1 class="m-1">Hier finden Sie unsere Rezepte</h1>
   </div>
   <div class="container">
-    <RezepteCardList v-bind:rezepte=this.rezepte></RezepteCardList>
+    <RezepteCardList v-bind:rezepte=this.rezepte @rezeptCreated="addRezept"></RezepteCardList>
   </div>
 </template>
 
 <script>
 import RezepteCardList from '@/components/RezepteCardList'
+import axios from 'axios'
+
 export default {
   name: 'Rezepte',
   components: { RezepteCardList },
@@ -18,34 +20,29 @@ export default {
     }
   },
   mounted () {
-    const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/rezepte'
-    const requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    }
+    const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
 
-    fetch(endpoint, requestOptions)
+    axios.get(endpoint)
       .then(response => {
-        console.log(response)
-        return response.json()
+        console.log('Got response from backend: ', response.data)
+        if (response.data) {
+          response.data.forEach(rezept => {
+            this.rezepte.push(rezept)
+          })
+        }
+        return response
       })
-      .then(result => result.forEach(rezept => {
-        this.rezepte.push(rezept)
-      }))
       .catch(error => console.log('error', error))
+  },
+  methods: {
+    addRezept ($event) {
+      console.log('Adding a new rezept: ', $event)
+      this.rezepte.push($event)
+    }
   }
 }
 </script>
 
 <style scoped>
-.rezept__gallery {
-    display: flex;
-    flex-direction: row;
-    flex-flow: row;
-}
 
-.rezept__card {
-    border-radius: 16px;
-    margin: 8px;
-}
 </style>

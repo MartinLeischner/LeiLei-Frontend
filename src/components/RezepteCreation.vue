@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'RezeptCreation',
   data () {
@@ -86,15 +88,22 @@ export default {
     },
     createRezept (event) {
       event.preventDefault()
+      const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
+
       const fd = new FormData()
       if (this.selectedImage != null) {
         fd.append('image', this.selectedImage, this.selectedImage.name)
       }
-      console.log(event)
       fd.append('name', this.name)
       fd.append('ingredient', this.ingredient)
       fd.append('difficulty', this.difficulty)
       fd.append('time', this.time)
+      axios.post(endpoint, fd)
+        .then(res => {
+          console.log('Got response from backend: ', res)
+          this.$emit('rezeptCreated', res.data)
+          // this.$store.addRezept(res.data)
+        })
     }
   }
 }
