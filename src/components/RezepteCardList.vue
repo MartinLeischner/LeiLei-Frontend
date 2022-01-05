@@ -1,6 +1,6 @@
 <template>
   <div class="rezept__gallery">
-    <div class="col col-sm-4" v-for="rezept in this.rezepte" :key="rezept.id">
+    <div class="col col-sm-4" v-for="rezept in this.$store.state.rezepte" :key="rezept.id">
       <div class="rezept__card">
         <div class="rezept__badge">
           <img :src=getDifficultyBadge(rezept) alt="Badge">
@@ -50,13 +50,12 @@ export default {
       }
     },
     goToRezept (id) {
-      this.$router.push({ name: 'Rezept', params: { id: id } })
+      this.$router.push({ name: 'RezeptDetail', params: { id: id } })
     },
     deleteRezept (id) {
       axios.delete(endpoint + '/' + id)
         .then(response => {
-          // this.$store.dispatch('deleteRezept', id)
-          console.log(response)
+          this.$store.commit('removeRezeptById', id)
         })
         .catch(error => {
           console.log(error)

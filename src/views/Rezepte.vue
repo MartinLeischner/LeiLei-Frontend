@@ -11,24 +11,31 @@
 import RezepteCardList from '@/components/RezepteCardList'
 import axios from 'axios'
 
+const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
+
 export default {
   name: 'Rezepte',
   components: { RezepteCardList },
   mounted () {
-    const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
-
+    // if (this.$store.getters.isEmpty) {
     console.log('Fetch all rezepte from backend ... ')
-    axios.get(endpoint)
-      .then(response => {
-        if (response.data) {
-          console.log('Rezepte fetched: ', response.data)
-          response.data.forEach(rezept => {
-            this.$store.commit('addRezept', rezept)
-          })
-        }
-        return response
-      })
-      .catch(error => console.log('error', error))
+    this.refreshRezepte()
+    // }
+  },
+  methods: {
+    refreshRezepte () {
+      axios.get(endpoint)
+        .then(response => {
+          if (response.data) {
+            console.log('Rezepte fetched: ', response.data)
+            response.data.forEach(rezept => {
+              this.$store.commit('addRezept', rezept)
+            })
+          }
+          return response
+        })
+        .catch(error => console.log('error', error))
+    }
   }
 }
 </script>
