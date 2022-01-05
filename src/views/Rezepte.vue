@@ -1,6 +1,6 @@
 <template>
-    <div class="p-3 mb-2 bg-success text-white">
-        <h1>Hier finden Sie unsere Rezepte</h1>
+    <div class="p-3 mb-3 bg-success text-white">
+        <h1 class="m3">Hier finden Sie unsere Rezepte</h1>
     </div>
     <div class="container">
         <div class="rezept__gallery">
@@ -14,7 +14,6 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">{{ rezept.time }}</li>
                                 <li class="list-group-item">{{ rezept.difficulty }}</li>
-                                <li class="list-group-item">A third item</li>
                             </ul>
                         </div>
                         <a href="#" class="card-link">Card link</a>

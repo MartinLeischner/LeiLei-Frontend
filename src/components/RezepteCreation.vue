@@ -3,7 +3,7 @@
             data-bs-toggle="offcanvas"
             data-bs-target="#rezepte-creation-offcanvas"
             aria-controls="#rezepte-creation-offcanvas">
-        <i class="bi bi-plus-fill"></i>
+        <i class="bi bi-plus-lg"></i>
     </button>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="rezepte-creation-offcanvas"
          aria-labelledby="offcanvas-label">
@@ -18,28 +18,31 @@
                   @submit="createRezept">
                 <div class="mb-3">
                     <label for="image" class="form-label">Bild</label>
-                    <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg"/>
+                    <input type="file" class="form-control" id="image" @change="onFileChanged" name="image" accept="image/png, image/jpeg"/>
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Rezeptname</label>
-                    <input type="text" class="form-control" id="name" v-model="name">
+                    <input type="text" class="form-control" id="name" v-model="name" required>
                 </div>
                 <div class="mb-3">
                     <label for="ingredient" class="form-label">Zutaten</label>
-                    <input type="text" class="form-control" id="ingredient" v-model="ingredient">
+                    <input type="text" class="form-control" id="ingredient" v-model="ingredient" required>
                 </div>
                 <div class="mb-3">
                     <label for="difficulty" class="form-label">Schwierigkeitsgrad</label>
-                    <select id="difficulty" class="form-select" v-model="difficulty">
-                        <option value="" selected>Choose...</option>
-                        <option value="LEICHT">Leicht</option>
-                        <option value="MITTEL">Mittel</option>
-                        <option value="SCHWER">Schwer</option>
+                    <select id="difficulty" class="form-select" v-model="difficulty" required>
+                        <option value="" disabled selected>Choose...</option>
+                        <option value="0">Leicht</option>
+                        <option value="1">Mittel</option>
+                        <option value="2">Schwer</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="time" class="form-label">Zubereitungsdauer</label>
-                    <input type="text" class="form-control" id="time" v-model="time">
+                    <div class="input-group">
+                      <input type="number" class="form-control" id="time" v-model="time" required>
+                      <span class="input-group-text">min</span>
+                    </div>
                 </div>
                 <div class="mt-5">
                     <button class="btn btn-primary me-3" type="submit">Erstellen</button>
@@ -55,31 +58,44 @@ export default {
   name: 'RezeptCreation',
   data () {
     return {
-      name: '',
-      ingredient: '',
-      difficulty: '',
-      time: ''
+      name: null,
+      ingredient: null,
+      difficulty: null,
+      time: null,
+      selectedImage: null
     }
   },
   methods: {
+    onFileChanged (event) {
+      this.selectedImage = event.target.files[0]
+    },
     createRezept (event) {
       event.preventDefault()
+      const fd = new FormData()
+      if (this.selectedImage != null) {
+        fd.append('image', this.selectedImage, this.selectedImage.name)
+      }
       console.log(event)
-      console.log(this.name)
-      console.log(this.ingredient)
-      console.log(this.difficulty)
-      console.log(this.time)
+      fd.append('name', this.name)
+      fd.append('ingredient', this.ingredient)
+      fd.append('difficulty', this.difficulty)
+      fd.append('time', this.time)
     }
   }
 }
 </script>
 
 <style scoped>
+.offcanvas-end {
+  width: 550px;
+}
 .sticky-button {
+  border-radius: 50%;
+  bottom: 32px;
+  height: 48px;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 15px;
-  border-radius: 30px;
+  right: 32px;
+  width: 48px;
+  z-index: 100;
 }
 </style>
