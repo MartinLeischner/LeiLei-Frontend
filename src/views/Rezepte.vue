@@ -1,6 +1,6 @@
 <template>
   <div class="p-3 mb-3 bg-success text-white">
-    <h1 class="m3">Hier finden Sie unsere Rezepte</h1>
+    <h1 class="m-1">Hier finden Sie unsere Rezepte</h1>
   </div>
   <div class="container">
     <RezepteCardList v-bind:rezepte=this.rezepte></RezepteCardList>

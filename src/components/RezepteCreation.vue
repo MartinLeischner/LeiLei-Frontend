@@ -37,7 +37,7 @@
         <div class="mb-3">
           <label for="difficulty" class="form-label">Schwierigkeitsgrad</label>
           <select id="difficulty" class="form-select" v-model="difficulty" required>
-            <option value="" disabled selected>Choose...</option>
+            <option value="" disabled selected>Wählen Sie...</option>
             <option value="0">Leicht</option>
             <option value="1">Mittel</option>
             <option value="2">Schwer</option>
@@ -133,7 +133,7 @@ export default {
   cursor: pointer;
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 1280px) {
   .sticky-button {
     bottom: 40px;
   }
