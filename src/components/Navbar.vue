@@ -26,17 +26,18 @@
         <form class="col-9 col-lg-auto me-lg-3">
           <input type="search" class="form-control" placeholder="Suche..." aria-label="Search">
         </form>
-        <div class="navbar-profile col-3 dropdown text-end">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="../assets/avatar.png" alt="mdo" width="32" height="32" class="rounded-circle">
+        <div class="navbar-profile col-3 btn-group dropdown text-end">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
+             id="dropdownUser" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="../assets/avatar.png" alt="profile avatar" width="32" height="32" class="rounded-circle">
           </a>
-          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
-            <li><a class="dropdown-item" href="#">Meine Rezepte</a></li>
-            <li><a class="dropdown-item" href="#">Einstellungen</a></li>
-            <li><a class="dropdown-item" href="#">Mein Profil</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Abmelden</a></li>
-          </ul>
+          <div class="dropdown-menu text-small" aria-labelledby="dropdownUser">
+            <a class="dropdown-item" href="#">Meine Rezepte</a>
+            <a class="dropdown-item" href="#">Einstellungen</a>
+            <a class="dropdown-item" href="#">Mein Profil</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Abmelden</a>
+          </div>
         </div>
       </div>
     </div>
@@ -62,6 +63,10 @@ export default {
 
 .navbar-profile {
   width: 50px;
+}
+
+.navbar-profile .dropdown-menu {
+  left: -110px;
 }
 
 .nav-link {
