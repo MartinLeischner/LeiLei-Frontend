@@ -1,6 +1,6 @@
 <template>
   <div class="rezept__gallery">
-    <div class="col col-sm-4" v-for="rezept in rezepte" :key="rezept.id">
+    <div class="col col-sm-4" v-for="rezept in this.rezepte" :key="rezept.id">
       <div class="rezept__card">
         <div class="rezept__badge">
           <img :src=getDifficultyBadge(rezept) alt="Badge">
@@ -32,10 +32,9 @@ const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
 
 export default {
   name: 'RezepteCardList',
-  props: {
-    rezepte: {
-      type: Array,
-      required: true
+  data () {
+    return {
+      rezepte: []
     }
   },
   methods: {

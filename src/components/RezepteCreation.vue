@@ -101,8 +101,11 @@ export default {
       axios.post(endpoint, fd)
         .then(res => {
           console.log('Got response from backend: ', res)
-          this.$emit('rezeptCreated', res.data)
-          // this.$store.addRezept(res.data)
+          // TODO clear form
+          // TODO close offcanvas
+
+          // add new rezept into store
+          this.$store.commit('addRezept', res.data)
         })
     }
   }
