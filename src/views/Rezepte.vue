@@ -1,65 +1,41 @@
 <template>
-  <div class="p-3 mb-2 bg-success text-white">
-<h1>Hier finden Sie unsere Rezepte</h1>
-  <div class="col" v-for="rezept in rezepte" :key="rezept.id">
-    <div class="card" style="width: 18rem;">
-     <img src="../assets/kisspng-cheese-sandwich-butterbrot-bread-bread-cheese-sandwich-5a9d7293bf4f09.1927332815202679237836.jpg" class="card-img-top" :alt="rezept.name">
-      <div class="card-body">
-        <h5 class="card-title">{{rezept.name}}</h5>
-       <p class="card-text">{{rezept.ingredient}}</p>
-     </div>
-     <ul class="list-group list-group-flush">
-       <li class="list-group-item">{{rezept.time}}</li>
-       <li class="list-group-item">{{rezept.difficulty}}</li>
-       <li class="list-group-item">A third item</li>
-     </ul>
-     <div class="card-body">
-       <a href="#" class="card-link">Card link</a>
-       <a href="#" class="card-link">Another link</a>
-     </div>
-   </div>
-</div>
+  <div class="p-3 mb-3 bg-success text-white">
+    <h1 class="m-1">Hier finden Sie unsere Rezepte</h1>
   </div>
-<!--  <div class="card" style="width: 18rem;">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">An item</li>
-      <li class="list-group-item">A second item</li>
-      <li class="list-group-item">A third item</li>
-    </ul>
-    <div class="card-body">
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
-    </div>
+  <div class="container">
+    <RezepteCardList></RezepteCardList>
   </div>
-  -->
 </template>
 
 <script>
+import RezepteCardList from '@/components/RezepteCardList'
+import axios from 'axios'
+
+const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
+
 export default {
   name: 'Rezepte',
-  data () {
-    return {
-      rezepte: []
-    }
-  },
+  components: { RezepteCardList },
   mounted () {
-    const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/rezepte'
-    const requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
+    // if (this.$store.getters.isEmpty) {
+    console.log('Fetch all rezepte from backend ... ')
+    this.refreshRezepte()
+    // }
+  },
+  methods: {
+    refreshRezepte () {
+      axios.get(endpoint)
+        .then(response => {
+          if (response.data) {
+            console.log('Rezepte fetched: ', response.data)
+            response.data.forEach(rezept => {
+              this.$store.commit('addRezept', rezept)
+            })
+          }
+          return response
+        })
+        .catch(error => console.log('error', error))
     }
-
-    fetch(endpoint, requestOptions)
-      .then(response => response.json())
-      .then(result => result.forEach(rezept => {
-        this.rezepte.push(rezept)
-      }))
-      .catch(error => console.log('error', error))
   }
 }
 </script>

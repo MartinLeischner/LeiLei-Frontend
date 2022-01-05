@@ -1,18 +1,13 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="LeiLei Kochbuch"/>
-  </div>
+  <Hero></Hero>
+  <!-- TODO add blog elements for most recent Rezept and most favorite Rezept -->
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Hero from '@/components/Hero'
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
-  }
+  components: { Hero }
 }
 </script>
