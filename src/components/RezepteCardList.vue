@@ -16,8 +16,14 @@
             <div class="card-text text-start mb-3">
               {{ rezept.ingredient }}
             </div>
-            <button class="btn btn-primary me-3 card-link" @click="goToRezept(rezept.id)">Zum Rezept</button>
-            <button class="btn btn-danger card-link" @click="deleteRezept(rezept.id)">Löschen</button>
+            <div class="btn-group">
+              <button class="btn btn-success me-3 card-link" @click="goToRezept(rezept.id)">
+                <i class="bi bi-arrow-right"></i> Zum Rezept
+              </button>
+              <button class="btn btn-danger card-link" @click="deleteRezept(rezept.id)">
+                <i class="bi bi-trash"></i> Löschen
+              </button>
+            </div>
           </div>
         </div>
       </div>

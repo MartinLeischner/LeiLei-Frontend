@@ -23,8 +23,8 @@
       </div>
 
       <div class="d-flex justify-content-md-end justify-content-between col-12 col-md-4 text-end">
-        <form class="col-9 col-lg-auto me-lg-3">
-          <input type="search" class="form-control" placeholder="Suche..." aria-label="Search">
+        <form class="col-9 col-lg-auto me-lg-3" @submit="this.search">
+          <input type="search" id="searchQuery" class="form-control" placeholder="Suche..." aria-label="Search">
         </form>
         <div class="navbar-profile col-3 btn-group dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
@@ -46,7 +46,14 @@
 
 <script>
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  methods: {
+    search ($event) {
+      $event.preventDefault()
+      const searchQuery = $event.target.searchQuery.value
+      this.$router.push({ name: 'Search', query: { q: searchQuery } })
+    }
+  }
 }
 </script>
 
