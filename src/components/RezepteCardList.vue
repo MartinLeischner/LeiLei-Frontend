@@ -1,12 +1,14 @@
 <template>
   <div class="rezept__gallery">
-    <div class="col col-sm-4" v-for="rezept in this.$store.state.rezepte" :key="rezept.id">
+    <div class="col col-sm-4" v-for="rezept in this.getRezepte" :key="rezept.id">
       <div class="rezept__card">
         <div class="rezept__badge">
           <img :src=getDifficultyBadge(rezept) alt="Badge">
         </div>
         <div class="card">
-          <img :src="rezept.imagePath" class="card-img-top" :alt="rezept.name">
+          <img v-if="rezept.imageName != null" :src="getImagePath(rezept.id)" class="card-img-top" :alt="rezept.name"
+            onerror="this.src='../assets/empty_rezept_image.png'">
+          <img v-else :src="require('../assets/empty_rezept_image.png')" class="card-img-top" :alt="rezept.name">
           <div class="card-body">
             <div class="card-title d-flex justify-content-between">
               <h5>{{ rezept.name }}</h5>
@@ -32,15 +34,16 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
-
 export default {
   name: 'RezepteCardList',
   data () {
     return {
       rezepte: []
+    }
+  },
+  computed: {
+    getRezepte () {
+      return this.$store.state.rezepte
     }
   },
   methods: {
@@ -55,17 +58,21 @@ export default {
         return require('../assets/schwer.png')
       }
     },
+    getImagePath (id) {
+      return process.env.VUE_APP_BACKEND_API_URL + '/rezepte/' + id + '/image'
+    },
     goToRezept (id) {
       this.$router.push({ name: 'RezeptDetail', params: { id: id } })
     },
     deleteRezept (id) {
-      axios.delete(endpoint + '/' + id)
-        .then(response => {
-          this.$store.commit('removeRezeptById', id)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      this.$store.dispatch('deleteRezept', id)
+      // axios.delete(endpoint + '/' + id)
+      //   .then(response => {
+      //     this.$store.commit('removeRezeptById', id)
+      //   })
+      //   .catch(error => {
+      //     console.log(error)
+      //   })
     }
   }
 }

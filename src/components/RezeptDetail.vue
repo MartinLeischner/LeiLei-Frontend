@@ -9,7 +9,9 @@
           <li class="breadcrumb-item">
             <router-link to="/rezepte">Rezepte</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{ this.getName() }}</li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ this.getName() }}
+          </li>
         </ol>
       </nav>
     </div>
@@ -18,7 +20,7 @@
     <div v-if="this.state === 'loading'">
       Loading ...
     </div>
-    <div v-else-if="this.state === 'success'">
+    <div v-else-if="this.currentRezept">
       <div class="row featurette">
         <div class="col-md-7 order-md-2">
           <h2 class="featurette-heading">{{ this.currentRezept.name }}</h2>
@@ -31,10 +33,10 @@
           <p>
             {{ this.currentRezept.time }}
           </p>
-          <button class="btn btn-success me-2">
+          <button class="btn btn-success me-2" @click="this.updateRezept">
             <i class="bi bi-save"></i> Änderungen speichern
           </button>
-          <button class="btn btn-danger">
+          <button class="btn btn-danger" @click="this.deleteRezept">
             <i class="bi bi-trash"></i> Löschen
           </button>
         </div>
@@ -75,8 +77,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'RezeptDetail',
   data () {
@@ -89,31 +89,32 @@ export default {
   mounted () {
     this.id = this.$route.params.id
     if (this.id) {
-      this.currentRezept = this.$store.getters.getRezeptById(this.id)
-      if (this.currentRezept !== null) {
-        this.state = 'success'
-      } else {
-        const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte/' + this.id
-        axios.get(endpoint)
-          .then(res => {
-            if (res.data) {
-              this.state = 'success'
-              this.currentRezept = res.data
-              this.$store.commit('addRezept', res.data)
-            }
-          })
-          .catch(error => {
-            console.error(error)
-            this.state = 'error'
-          })
-      }
+      this.$store.dispatch('fetchRezeptById', this.id)
+        .then(() => {
+          this.currentRezept = this.$store.getters.getRezeptById(this.id)
+          this.state = 'success'
+        })
+        .catch(() => {
+          this.state = 'error'
+        })
     } else {
       this.state = 'error'
     }
   },
   methods: {
     getName () {
-      return (this.currentRezept != null) ? this.currentRezept.name : 'Rezept 404'
+      if (this.currentRezept) {
+        return this.currentRezept.name
+      } else {
+        return 'Rezept 404'
+      }
+    },
+    updateRezept: function () {
+      console.log('updating ...')
+    },
+    deleteRezept: function () {
+      this.$store.dispatch('deleteRezept', this.id)
+      this.$router.push({ name: 'Rezepte' })
     }
   }
 }
