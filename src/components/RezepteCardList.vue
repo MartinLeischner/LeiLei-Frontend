@@ -8,7 +8,7 @@
         <div class="card">
           <img v-if="rezept.imageName != null" :src="getImagePath(rezept.id)" class="card-img-top" :alt="rezept.name"
             onerror="this.src='../assets/empty_rezept_image.png'">
-          <img v-else :src="require('../assets/empty_rezept_image.png')" class="card-img-top" :alt="rezept.name">
+          <img v-else src="http://placehold.it/300x200" class="card-img-top" :alt="rezept.name">
           <div class="card-body">
             <div class="card-title d-flex justify-content-between">
               <h5>{{ rezept.name }}</h5>
@@ -65,14 +65,20 @@ export default {
       this.$router.push({ name: 'RezeptDetail', params: { id: id } })
     },
     deleteRezept (id) {
-      this.$store.dispatch('deleteRezept', id)
-      // axios.delete(endpoint + '/' + id)
-      //   .then(response => {
-      //     this.$store.commit('removeRezeptById', id)
-      //   })
-      //   .catch(error => {
-      //     console.log(error)
-      //   })
+      this.$swal.fire({
+        icon: 'question',
+        title: 'Löschen',
+        text: 'Wollen Sie das Rezept tatsächlich entfernen? Dieser Vorgang kann nicht rückgängig gemacht werden.',
+        showCancelButton: true,
+        confirmButtonText: 'Ja',
+        cancelButtonText: 'Nein'
+      }).then((res) => {
+        console.log(res)
+        if (res.isConfirmed) {
+          this.$store.dispatch('deleteRezept', id)
+          this.goBackToRezepte()
+        }
+      })
     }
   }
 }

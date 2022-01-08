@@ -19,7 +19,6 @@ const store = createStore({
           }
           return res
         })
-        .catch(error => console.error('Error during fetch all rezepte: ', error))
     },
     fetchRezeptById ({ commit }, id) {
       return axios.get(endpoint + '/' + id)
@@ -30,10 +29,16 @@ const store = createStore({
           }
           return res
         })
-        .catch(error => console.error('Error during fetch single rezept: ', error))
     },
-    updateRezept ({ commit }, id, newRezept) {
-      return axios.put(endpoint + '/' + id, newRezept)
+    createRezept ({ commit }, payload) {
+      return axios.post(endpoint, payload.data)
+        .then(res => {
+          console.log('Rezept created: ', res.data)
+          commit('addRezept', res.data)
+        })
+    },
+    updateRezept ({ commit }, newRezept) {
+      return axios.put(endpoint + '/' + newRezept.id, newRezept)
         .then(res => {
           if (res.data) {
             console.log('Rezept updated: ', res.data)
@@ -41,7 +46,6 @@ const store = createStore({
           }
           return res
         })
-        .catch(error => console.error('Error during update: ', error))
     },
     deleteRezept ({ commit }, id) {
       return axios.delete(endpoint + '/' + id)
@@ -49,7 +53,6 @@ const store = createStore({
           console.log('Rezept deleted: ', res.data)
           commit('removeRezeptById', id)
         })
-        .catch(error => console.error('Error during delete: ', error))
     }
   },
   mutations: {
