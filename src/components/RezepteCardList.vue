@@ -19,10 +19,10 @@
               {{ rezept.ingredient }}
             </div>
             <div class="btn-group">
-              <button class="btn btn-success me-3 card-link" @click="goToRezept(rezept.id)">
+              <button class="btn btn-success btn__goto me-3 card-link" @click="goToRezept(rezept.id)">
                 <i class="bi bi-arrow-right"></i> Zum Rezept
               </button>
-              <button class="btn btn-danger card-link" @click="deleteRezept(rezept.id)">
+              <button class="btn btn-danger btn__delete card-link" @click="deleteRezept(rezept.id)">
                 <i class="bi bi-trash"></i> Löschen
               </button>
             </div>
