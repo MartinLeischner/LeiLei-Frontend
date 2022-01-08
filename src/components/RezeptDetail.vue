@@ -9,7 +9,9 @@
           <li class="breadcrumb-item">
             <router-link to="/rezepte">Rezepte</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{ this.getName() }}</li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ this.getName() }}
+          </li>
         </ol>
       </nav>
     </div>
@@ -18,56 +20,64 @@
     <div v-if="this.state === 'loading'">
       Loading ...
     </div>
-    <div v-else-if="this.state === 'success'">
+    <div v-else-if="this.currentRezept">
       <div class="row featurette">
         <div class="col-md-7 order-md-2">
-          <h2 class="featurette-heading">{{ this.currentRezept.name }}</h2>
-          <p>
-            {{ this.currentRezept.ingredient }}
-          </p>
-          <p>
-            {{ this.currentRezept.difficulty }}
-          </p>
-          <p>
-            {{ this.currentRezept.time }}
-          </p>
-          <button class="btn btn-success me-2">
-            <i class="bi bi-save"></i> Änderungen speichern
-          </button>
-          <button class="btn btn-danger">
-            <i class="bi bi-trash"></i> Löschen
-          </button>
+          <form ref="rezeptForm" class="needs-validation text-start">
+            <div class="mb-3">
+              <label for="name" class="form-label">Rezeptname*</label>
+              <input type="text" class="form-control" id="name" v-model="this.currentRezept.name" required>
+            </div>
+            <div class="mb-3">
+              <label for="ingredient" class="form-label">Zutaten*</label>
+              <input type="text" class="form-control" id="ingredient" v-model="this.currentRezept.ingredient" required>
+            </div>
+            <div class="mb-3">
+              <label for="difficulty" class="form-label">Schwierigkeitsgrad*</label>
+              <select id="difficulty" class="form-select" v-model="this.currentRezept.difficulty" required>
+                <option value="0" :selected="this.currentRezept.difficulty === 0">Leicht</option>
+                <option value="1" :selected="this.currentRezept.difficulty === 1">Mittel</option>
+                <option value="2" :selected="this.currentRezept.difficulty === 2">Schwer</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="time" class="form-label">Zubereitungsdauer*</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="time" v-model="this.currentRezept.time" required>
+                <span class="input-group-text">min</span>
+              </div>
+            </div>
+            <div class="mt-5">
+              <button class="btn btn-success me-2" @click="this.updateRezept">
+                <i class="bi bi-save"></i> Änderungen speichern
+              </button>
+              <button class="btn btn-danger" @click="this.deleteRezept">
+                <i class="bi bi-trash"></i> Löschen
+              </button>
+            </div>
+          </form>
         </div>
         <div class="col-md-5 order-md-1">
-          <svg
-            class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto rounded-circle border border-1 border-success"
-            width="300" height="300"
-            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500"
-            preserveAspectRatio="xMidYMid slice" focusable="false">
-            <title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#eee"></rect>
-            <text x="50%" y="50%" fill="#aaa" dy=".3em" dx="-1.75em">300x300</text>
-          </svg>
+          <img v-if="this.currentRezept.imageName != null" :src="getImagePath()" width="400" height="400"
+               class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto rounded-circle border border-1 border-success">
+          <img v-else src="http://placehold.it/400x400" width="400" height="400"
+            class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto rounded-circle border border-1 border-success">
         </div>
       </div>
     </div>
     <div v-else-if="this.state === 'error'">
       <div class="row d-flex flex-column flex-fill justify-content-center align-items-center">
         <div class="col-8 col-md-5 mb-3">
-          <svg
-            class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto rounded-circle border border-1 border-success"
-            width="300" height="300"
-            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500"
-            preserveAspectRatio="xMidYMid slice" focusable="false">
-            <title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#eee"></rect>
-            <text x="50%" y="50%" fill="#aaa" dy=".3em" dx="-0.75em">😢</text>
-          </svg>
+          <img class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto rounded-circle border border-1 border-success"
+            width="300" height="300" role="img" :src="require('@/assets/empty_rezept_image.png')">
         </div>
-        <div>
+        <div class="alert alert-danger">
           <p>
             Rezept mit der ID {{ this.id }} konnte nicht gefunden werden.
           </p>
+          <button class="btn btn-outline-danger" @click="this.goBackToRezepte">
+            <i class="bi bi-arrow-left"></i> Zurück zu den Rezepten
+          </button>
         </div>
       </div>
     </div>
@@ -75,8 +85,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'RezeptDetail',
   data () {
@@ -89,31 +97,59 @@ export default {
   mounted () {
     this.id = this.$route.params.id
     if (this.id) {
-      this.currentRezept = this.$store.getters.getRezeptById(this.id)
-      if (this.currentRezept !== null) {
-        this.state = 'success'
-      } else {
-        const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte/' + this.id
-        axios.get(endpoint)
-          .then(res => {
-            if (res.data) {
-              this.state = 'success'
-              this.currentRezept = res.data
-              this.$store.commit('addRezept', res.data)
-            }
-          })
-          .catch(error => {
-            console.error(error)
-            this.state = 'error'
-          })
-      }
+      this.$store.dispatch('fetchRezeptById', this.id)
+        .then(() => {
+          this.currentRezept = this.$store.getters.getRezeptById(this.id)
+          this.state = 'success'
+        })
+        .catch(() => {
+          console.log('there is an error')
+          this.state = 'error'
+        })
     } else {
       this.state = 'error'
     }
   },
   methods: {
     getName () {
-      return (this.currentRezept != null) ? this.currentRezept.name : 'Rezept 404'
+      if (this.currentRezept) {
+        return this.currentRezept.name
+      } else {
+        return 'Rezept 404'
+      }
+    },
+    updateRezept (event) {
+      event.preventDefault()
+      this.$store.dispatch('updateRezept', this.currentRezept)
+        .then(() => {
+          this.$swal('Rezept erfolgreich aktualisiert', '', 'success')
+        })
+        .catch((error) => {
+          this.$swal('Fehler', 'Rezept konnte nicht aktualisiert werden. Fehler: ' + error, 'error')
+        })
+    },
+    deleteRezept (event) {
+      event.preventDefault()
+      this.$swal.fire({
+        icon: 'question',
+        title: 'Löschen',
+        text: 'Wollen Sie das Rezept tatsächlich entfernen? Dieser Vorgang kann nicht rückgängig gemacht werden.',
+        showCancelButton: true,
+        confirmButtonText: 'Ja',
+        cancelButtonText: 'Nein'
+      }).then((res) => {
+        console.log(res)
+        if (res.isConfirmed) {
+          this.$store.dispatch('deleteRezept', this.id)
+          this.goBackToRezepte()
+        }
+      })
+    },
+    goBackToRezepte () {
+      this.$router.push({ name: 'Rezepte' })
+    },
+    getImagePath () {
+      return process.env.VUE_APP_BACKEND_API_URL + '/rezepte/' + this.currentRezept.id + '/image'
     }
   }
 }

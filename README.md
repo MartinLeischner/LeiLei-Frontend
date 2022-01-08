@@ -1,4 +1,6 @@
-# rezepte-frontend
+[![CI](https://github.com/MartinLeischner/LeiLei-Frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/MartinLeischner/LeiLei-Frontend/actions/workflows/ci.yml)
+
+# Rezepte-frontend
 
 ## Project setup
 ```

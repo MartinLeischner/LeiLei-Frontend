@@ -1,12 +1,14 @@
 <template>
   <div class="rezept__gallery">
-    <div class="col col-sm-4" v-for="rezept in this.$store.state.rezepte" :key="rezept.id">
+    <div class="col col-sm-4" v-for="rezept in this.getRezepte" :key="rezept.id">
       <div class="rezept__card">
         <div class="rezept__badge">
           <img :src=getDifficultyBadge(rezept) alt="Badge">
         </div>
         <div class="card">
-          <img :src="rezept.imagePath" class="card-img-top" :alt="rezept.name">
+          <img v-if="rezept.imageName != null" :src="getImagePath(rezept.id)" class="card-img-top" :alt="rezept.name"
+            onerror="this.src='../assets/empty_rezept_image.png'">
+          <img v-else src="http://placehold.it/300x200" class="card-img-top" :alt="rezept.name">
           <div class="card-body">
             <div class="card-title d-flex justify-content-between">
               <h5>{{ rezept.name }}</h5>
@@ -17,10 +19,10 @@
               {{ rezept.ingredient }}
             </div>
             <div class="btn-group">
-              <button class="btn btn-success me-3 card-link" @click="goToRezept(rezept.id)">
+              <button class="btn btn-success btn__goto me-3 card-link" @click="goToRezept(rezept.id)">
                 <i class="bi bi-arrow-right"></i> Zum Rezept
               </button>
-              <button class="btn btn-danger card-link" @click="deleteRezept(rezept.id)">
+              <button class="btn btn-danger btn__delete card-link" @click="deleteRezept(rezept.id)">
                 <i class="bi bi-trash"></i> Löschen
               </button>
             </div>
@@ -32,15 +34,16 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
-
 export default {
   name: 'RezepteCardList',
   data () {
     return {
       rezepte: []
+    }
+  },
+  computed: {
+    getRezepte () {
+      return this.$store.state.rezepte
     }
   },
   methods: {
@@ -55,17 +58,27 @@ export default {
         return require('../assets/schwer.png')
       }
     },
+    getImagePath (id) {
+      return process.env.VUE_APP_BACKEND_API_URL + '/rezepte/' + id + '/image'
+    },
     goToRezept (id) {
       this.$router.push({ name: 'RezeptDetail', params: { id: id } })
     },
     deleteRezept (id) {
-      axios.delete(endpoint + '/' + id)
-        .then(response => {
-          this.$store.commit('removeRezeptById', id)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      this.$swal.fire({
+        icon: 'question',
+        title: 'Löschen',
+        text: 'Wollen Sie das Rezept tatsächlich entfernen? Dieser Vorgang kann nicht rückgängig gemacht werden.',
+        showCancelButton: true,
+        confirmButtonText: 'Ja',
+        cancelButtonText: 'Nein'
+      }).then((res) => {
+        console.log(res)
+        if (res.isConfirmed) {
+          this.$store.dispatch('deleteRezept', id)
+          this.goBackToRezepte()
+        }
+      })
     }
   }
 }
