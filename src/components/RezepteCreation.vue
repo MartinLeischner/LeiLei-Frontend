@@ -1,5 +1,6 @@
 <template>
   <button class="btn btn-success sticky-button"
+          ref="offcanvasTrigger"
           data-bs-toggle="offcanvas"
           data-bs-target="#rezepte-creation-offcanvas"
           aria-controls="#rezepte-creation-offcanvas">
@@ -60,8 +61,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'RezeptCreation',
   data () {
@@ -88,8 +87,6 @@ export default {
     },
     createRezept (event) {
       event.preventDefault()
-      const endpoint = process.env.VUE_APP_BACKEND_API_URL + '/rezepte'
-
       const fd = new FormData()
       if (this.selectedImage != null) {
         fd.append('image', this.selectedImage, this.selectedImage.name)
@@ -98,14 +95,15 @@ export default {
       fd.append('ingredient', this.ingredient)
       fd.append('difficulty', this.difficulty)
       fd.append('time', this.time)
-      axios.post(endpoint, fd)
-        .then(res => {
-          console.log('Got response from backend: ', res)
-          // TODO clear form
-          // TODO close offcanvas
 
-          // add new rezept into store
-          this.$store.commit('addRezept', res.data)
+      this.$store.dispatch('createRezept', { data: fd })
+        .then((res) => {
+          this.$swal('Erfolgreich', 'Das Rezept wurde erstellt', 'success')
+          this.$refs.rezeptForm.reset()
+          this.$refs.offcanvasTrigger.click()
+        })
+        .catch((error) => {
+          this.$swal('Fehler', 'Rezept konnte nicht erstellt werden. Fehler: ' + error.message, 'error')
         })
     }
   }
