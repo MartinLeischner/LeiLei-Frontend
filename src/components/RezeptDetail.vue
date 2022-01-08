@@ -60,7 +60,7 @@
         <div class="col-md-5 order-md-1">
           <img v-if="this.currentRezept.imageName != null" :src="getImagePath()" width="400" height="400"
                class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto rounded-circle border border-1 border-success">
-          <img v-else src="http://placehold.it/400x400" width="400" height="400"
+          <img v-else :src="require('@/assets/placeholder-food-icons.jpg')" width="400" height="400"
             class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto rounded-circle border border-1 border-success">
         </div>
       </div>

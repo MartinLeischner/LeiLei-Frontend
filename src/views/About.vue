@@ -17,14 +17,14 @@
         </div>
         <div class="col-md-5">
           <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-               width="500" height="500" src="http://placehold.it/500x500">
+               width="500" height="500" :src="require('@/assets/placeholder-food-icons.jpg')">
         </div>
       </div>
       <hr class="featurette-divider m-5">
       <div class="row featurette">
         <div class="col-md-5">
           <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-               width="500" height="500" src="http://placehold.it/500x500">
+               width="500" height="500" :src="require('@/assets/placeholder-food-icons.jpg')">
         </div>
         <div class="col-md-7 d-flex flex-column justify-content-center">
           <h2 class="featurette-heading">Zu LeiLei</h2>
