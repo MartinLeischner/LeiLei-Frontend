@@ -7,8 +7,8 @@
         </div>
         <div class="card">
           <img v-if="rezept.imageName != null" :src="getImagePath(rezept.id)" class="card-img-top" :alt="rezept.name"
-            onerror="this.src='../assets/empty_rezept_image.png'">
-          <img v-else src="http://placehold.it/300x200" class="card-img-top" :alt="rezept.name">
+            onerror="this.src='../assets/placeholder-food-icons.jpg'">
+          <img v-else :src="require('@/assets/placeholder-food-icons.jpg')" class="card-img-top" :alt="rezept.name">
           <div class="card-body">
             <div class="card-title d-flex justify-content-between">
               <h5>{{ rezept.name }}</h5>
