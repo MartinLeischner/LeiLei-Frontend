@@ -47,7 +47,7 @@
         <div class="mb-3">
           <label for="time" class="form-label">Zubereitungsdauer</label>
           <div class="input-group">
-            <input type="number" class="form-control" id="time" v-model="time" required>
+            <input type="number" min="0" class="form-control" id="time" v-model="time" required>
             <span class="input-group-text">min</span>
           </div>
         </div>
